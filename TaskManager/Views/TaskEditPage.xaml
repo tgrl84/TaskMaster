@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:TaskMaster.ViewModels"
+             xmlns:model="clr-namespace:TaskMaster"
+             x:Class="TaskMaster.Views.TaskEditPage"
+             x:DataType="viewmodel:TaskEditViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="*, Auto" Padding="15">
+        <ScrollView Grid.Row="0">
+            <StackLayout Spacing="15">
+                <!-- Titre -->
+                <Label Text="Titre" FontAttributes="Bold" />
+                <Entry Text="{Binding Titre}" Placeholder="Titre de la tâche" />
+                
+                <!-- Description -->
+                <Label Text="Description" FontAttributes="Bold" />
+                <Editor Text="{Binding Description}" Placeholder="Description de la tâche" HeightRequest="100" />
+                
+                <!-- Statut -->
+                <Label Text="Statut" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Statuts}" SelectedItem="{Binding Statut}" />
+                
+                <!-- Priorité -->
+                <Label Text="Priorité" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Priorites}" SelectedItem="{Binding Priorite}" />
+                
+                <!-- Catégorie -->
+                <Label Text="Catégorie" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Categories}" SelectedItem="{Binding Categorie}" />
+                
+                <!-- Échéance -->
+                <Label Text="Date d'échéance" FontAttributes="Bold" />
+                <DatePicker Date="{Binding Echeance}" />
+                
+                <!-- Réalisateur -->
+                <Label Text="Réalisateur" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding Utilisateurs}" 
+                        SelectedItem="{Binding SelectedRealisateur}"
+                        ItemDisplayBinding="{Binding Prenom, StringFormat='{0} {1}', Converter={StaticResource FullNameConverter}, ConverterParameter={Binding Nom}}" />
+            </StackLayout>
+        </ScrollView>
+        
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="0,15,0,0">
+            <Button Grid.Column="0" Text="Annuler" Command="{Binding CancelCommand}" Margin="0,0,5,0" />
+            <Button Grid.Column="1" Text="Sauvegarder" Command="{Binding SaveTaskCommand}" Margin="5,0,0,0" />
+        </Grid>
+        
+        <!-- Indicateur d'activité -->
+        <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+    </Grid>
+</ContentPage> 

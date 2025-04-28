@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="TaskMaster.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:TaskMaster"
+    xmlns:views="clr-namespace:TaskMaster.Views"
+    Shell.FlyoutBehavior="Flyout">
+
+    <ShellContent
+        Title="Connexion"
+        ContentTemplate="{DataTemplate local:MainPage}"
+        Route="login" 
+        FlyoutItemIsVisible="False" />
+
+    <FlyoutItem Title="Tâches" Icon="task_icon">
+        <ShellContent
+            Title="Mes Tâches"
+            ContentTemplate="{DataTemplate views:TasksPage}"
+            Route="tasks" />
+    </FlyoutItem>
+    
+    <!-- Routes enregistrées via code-behind dans AppShell.xaml.cs -->
+</Shell>

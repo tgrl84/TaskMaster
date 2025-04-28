@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:TaskMaster.ViewModels"
+             xmlns:model="clr-namespace:TaskMaster"
+             x:Class="TaskMaster.Views.TasksPage"
+             x:DataType="viewmodel:TasksViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="10">
+        <!-- En-tête et filtres -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Label Text="Filtrer par:" VerticalOptions="Center" />
+                
+                <Picker Title="Statut" SelectedItem="{Binding FilterStatus}">
+                    <Picker.Items>
+                        <x:String>à faire</x:String>
+                        <x:String>en cours</x:String>
+                        <x:String>terminée</x:String>
+                        <x:String>annulée</x:String>
+                    </Picker.Items>
+                </Picker>
+                
+                <Picker Title="Priorité" SelectedItem="{Binding FilterPriority}">
+                    <Picker.Items>
+                        <x:String>basse</x:String>
+                        <x:String>moyenne</x:String>
+                        <x:String>haute</x:String>
+                        <x:String>critique</x:String>
+                    </Picker.Items>
+                </Picker>
+                
+                <Picker Title="Catégorie" SelectedItem="{Binding FilterCategory}">
+                    <Picker.Items>
+                        <x:String>perso</x:String>
+                        <x:String>travail</x:String>
+                        <x:String>projet</x:String>
+                        <x:String>autre</x:String>
+                    </Picker.Items>
+                </Picker>
+                
+                <Button Text="Filtrer" Command="{Binding FilterTasksCommand}" />
+                <Button Text="Réinitialiser" Command="{Binding ClearFiltersCommand}" />
+            </StackLayout>
+            
+            <Button Grid.Column="1" Text="Déconnexion" Command="{Binding LogoutCommand}" />
+        </Grid>
+
+        <!-- Liste des tâches -->
+        <RefreshView Grid.Row="1" IsRefreshing="{Binding IsRefreshing}" Command="{Binding LoadTasksCommand}">
+            <CollectionView ItemsSource="{Binding Tasks}" SelectionMode="Single"
+                            SelectionChangedCommand="{Binding TaskSelectedCommand}"
+                            SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="Aucune tâche trouvée" HorizontalOptions="Center" />
+                        <Label Text="Ajoutez une nouvelle tâche ou modifiez vos filtres" HorizontalOptions="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Tache">
+                        <Frame Margin="5" Padding="10">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Indicateur de priorité -->
+                                <BoxView Grid.Column="0" WidthRequest="5" HeightRequest="60"
+                                         BackgroundColor="{Binding Priorite, Converter={StaticResource PriorityToColorConverter}}" />
+                                
+                                <!-- Informations sur la tâche -->
+                                <StackLayout Grid.Column="1" Padding="10,0,0,0">
+                                    <Label Text="{Binding Titre}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Description}" MaxLines="2" LineBreakMode="TailTruncation" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label Text="{Binding Statut}" FontSize="12" />
+                                        <Label Text=" | " FontSize="12" />
+                                        <Label Text="{Binding Categorie}" FontSize="12" />
+                                    </StackLayout>
+                                </StackLayout>
+                                
+                                <!-- Date d'échéance -->
+                                <StackLayout Grid.Column="2" HorizontalOptions="End">
+                                    <Label Text="Échéance:" FontSize="12" />
+                                    <Label Text="{Binding Echeance, Converter={StaticResource DateTimeToStringConverter}}" 
+                                           TextColor="{Binding Echeance, Converter={StaticResource DeadlineToColorConverter}}" 
+                                           FontSize="12" />
+                                    <Label Text="{Binding Realisateur.Prenom, StringFormat='Assigné à: {0}'}" FontSize="12" />
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Bouton d'ajout -->
+        <Button Grid.Row="2" Text="Ajouter une tâche" Command="{Binding AddTaskCommand}"
+                HorizontalOptions="Center" Margin="0,10,0,0" />
+        
+        <!-- Indicateur d'activité -->
+        <ActivityIndicator Grid.RowSpan="3" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+    </Grid>
+</ContentPage> 

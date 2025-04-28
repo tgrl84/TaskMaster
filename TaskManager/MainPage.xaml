@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+            xmlns:viewmodel="clr-namespace:TaskMaster.ViewModels"
+            x:Class="TaskMaster.MainPage"  
+            x:DataType="viewmodel:LoginViewModel"
+            Title="{Binding Title}">  
+
+   <ScrollView>  
+       <Grid  
+           Padding="30,50"  
+           RowSpacing="20"  
+           ColumnDefinitions="*"  
+           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"  
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           WidthRequest="400">  
+
+           <Label  
+               Grid.Row="0"  
+               Text="TaskMaster"  
+               Style="{StaticResource Headline}"  
+               HorizontalOptions="Center" />  
+
+           <Label  
+               Grid.Row="1"  
+               Text="{Binding Title}"
+               FontSize="24"
+               HorizontalOptions="Center" />
+
+           <Label
+               Grid.Row="2"
+               Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullOrEmptyBoolConverter}}"
+               HorizontalOptions="Center" />
+
+           <!-- Formulaire de connexion -->
+           <StackLayout Grid.Row="3" IsVisible="{Binding IsSignUpMode, Converter={StaticResource InvertedBoolConverter}}">
+               <Entry  
+                   x:Name="EmailEntry"  
+                   Placeholder="Email"
+                   Text="{Binding Email}"
+                   Keyboard="Email"  
+                   HorizontalOptions="Fill" />  
+
+               <Entry  
+                   x:Name="PasswordEntry"  
+                   Placeholder="Mot de passe"
+                   Text="{Binding Password}"
+                   IsPassword="True"  
+                   Keyboard="Text"  
+                   HorizontalOptions="Fill" />
+
+               <Button  
+                   x:Name="LoginButton"  
+                   Text="Se connecter"  
+                   Command="{Binding LoginCommand}"
+                   IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                   HorizontalOptions="Fill" />
+           </StackLayout>
+
+           <!-- Formulaire d'inscription -->
+           <StackLayout Grid.Row="4" IsVisible="{Binding IsSignUpMode}">
+               <Entry  
+                   Placeholder="Prénom"
+                   Text="{Binding FirstName}"
+                   Keyboard="Text"  
+                   HorizontalOptions="Fill" />
+
+               <Entry  
+                   Placeholder="Nom"
+                   Text="{Binding LastName}"
+                   Keyboard="Text"  
+                   HorizontalOptions="Fill" />
+
+               <Entry  
+                   Placeholder="Email"
+                   Text="{Binding Email}"
+                   Keyboard="Email"  
+                   HorizontalOptions="Fill" />  
+
+               <Entry  
+                   Placeholder="Mot de passe"
+                   Text="{Binding Password}"
+                   IsPassword="True"  
+                   Keyboard="Text"  
+                   HorizontalOptions="Fill" />
+
+               <Button  
+                   Text="S'inscrire"  
+                   Command="{Binding RegisterCommand}"
+                   IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+                   HorizontalOptions="Fill" />
+           </StackLayout>
+
+           <!-- Basculer entre connexion et inscription -->
+           <Button  
+               Grid.Row="5"  
+               Text="{Binding IsSignUpMode, Converter={StaticResource SignUpModeBoolConverter}}"  
+               Command="{Binding ToggleModeCommand}"
+               IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}"
+               Style="{StaticResource TextButton}"
+               HorizontalOptions="Center" />
+
+           <!-- Indicateur d'activité -->
+           <ActivityIndicator
+               Grid.Row="6"
+               IsRunning="{Binding IsBusy}"
+               IsVisible="{Binding IsBusy}"
+               HorizontalOptions="Center" />
+
+        </Grid>  
+   </ScrollView>  
+
+</ContentPage>
